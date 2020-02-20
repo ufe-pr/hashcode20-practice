@@ -1,3 +1,6 @@
+from operator import itemgetter
+
+
 def get_data(FILENAME):
     with open(FILENAME) as f:
         B, L, D = map(int, f.readline().split())
@@ -11,15 +14,25 @@ def get_data(FILENAME):
 
         
     return B, L, D, books, libraries
+def sort_by_days(libraries, L):
+    ds = []
+    for i in range(L):
+        ds.append(libraries[i]['sign_days'])
 
-def signup_order(L):
-    return list(range(L))
+    group = zip(ds, range(L))
+    sort = sorted(group)
+    return [x[1] for x in sort]
+
+
+def signup_order(L, libraries):
+
+    return sort_by_days(libraries, L)
 
 
 def get_books_per_day(libraries, books, D):
     SB = []
     AL = set()
-    lib_order = signup_order(len(libraries))
+    lib_order = signup_order(len(libraries), libraries)
     last_sum = -1
     last_index = 0
     complete_days = []
@@ -48,7 +61,7 @@ def get_books_per_day(libraries, books, D):
                     s_count += 1
                 index += 1
         if i in complete_days:
-            AL.add(complete_days.index(i))
+            AL.add(lib_order[complete_days.index(i)])
         for o in to_remove:
             AL.remove(o)
         print('End of day', i)
@@ -64,7 +77,7 @@ def get_books_per_day(libraries, books, D):
 
     return out_count, outputs
         
-FILENAMES = ['c_incunabula.txt', 'd_tough_choices.txt', 'e_so_many_books.txt', 'f_libraries_of_the_world.txt']
+FILENAMES = ['c_incunabula.txt']
 
 for i in FILENAMES:
     FILENAME = i
