@@ -20,6 +20,13 @@ def get_books_per_day(libraries, books, D):
     SB = []
     AL = set()
     lib_order = signup_order(len(libraries))
+    last_sum = -1
+    last_index = 0
+    complete_days = []
+
+    for i in lib_order:
+        last_sum += libraries[i]['sign_days']
+        complete_days.append(last_sum)
     
     for i in range(D):
         to_remove = []
@@ -40,13 +47,10 @@ def get_books_per_day(libraries, books, D):
                     lib['books'].remove(book)
                     s_count += 1
                 index += 1
-        ssum = 0
-        for lib_index in lib_order:
-            ssum += libraries[lib_index]['sign_days']
-            if ssum <= i + 1:
-                AL.add(lib_index)
-        for i in to_remove:
-            AL.remove(i)
+        if i in complete_days:
+            AL.add(complete_days.index(i))
+        for o in to_remove:
+            AL.remove(o)
         print('End of day', i)
 
     outputs = []
@@ -60,7 +64,7 @@ def get_books_per_day(libraries, books, D):
 
     return out_count, outputs
         
-FILENAMES = ['a_example.txt', 'b_read_on.txt', 'c_incunabula.txt', 'd_tough_choices.txt', 'e_so_many_books.txt', 'f_libraries_of_the_world.txt']
+FILENAMES = ['c_incunabula.txt', 'd_tough_choices.txt', 'e_so_many_books.txt', 'f_libraries_of_the_world.txt']
 
 for i in FILENAMES:
     FILENAME = i
